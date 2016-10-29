@@ -4,10 +4,10 @@
   },
   "description": "Asserts the maximal number of outdated dependencies.",
   "devDependencies": {
-    "eslint": "3.4.0",
-    "eslint-config-airbnb-base": "5.0.3",
-    "eslint-plugin-import": "1.14.0",
-    "mocha": "3.0.2"
+    "eslint": "3.9.0",
+    "eslint-config-airbnb-base": "9.0.0",
+    "eslint-plugin-import": "2.0.1",
+    "mocha": "3.1.2"
   },
   "license": "MIT",
   "main": "outdated.js",

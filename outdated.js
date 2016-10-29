@@ -3,20 +3,20 @@
 const childProcess = require('child_process');
 
 function exec(command, options) {
-  const defer = Promise.defer();
-  childProcess.exec(command, options, (err, stdout, stderr) => {
-    if (err) {
-      return defer.reject(err);
-    }
-    return defer.resolve({ stdout, stderr });
+  return new Promise((resolve, reject) => {
+    childProcess.exec(command, options, (err, stdout, stderr) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve({ stdout, stderr });
+    });
   });
-  return defer.promise;
 }
 module.exports.exec = exec;
 
 function npmOutdatedToList(outdatedObject) {
   return Object.keys(outdatedObject)
-        .map(name => Object.assign({ name }, outdatedObject[name]));
+    .map(name => Object.assign({ name }, outdatedObject[name]));
 }
 module.exports.npmOutdatedToList = npmOutdatedToList;
 
@@ -45,10 +45,10 @@ function assertDependencies(outdatedDependencies, maxWarnings) {
 
 function getOutdatedDependencies() {
   return exec('npm outdated --json')
-      .then(result => result.stdout)
-      .then(result => (result === '' ? '{}' : result))
-      .then(jsonParse)
-      .then(npmOutdatedToList);
+    .then(result => result.stdout)
+    .then(result => (result === '' ? '{}' : result))
+    .then(jsonParse)
+    .then(npmOutdatedToList);
 }
 
 function parseArgs(argv) {
@@ -71,6 +71,6 @@ if (!module.parent) {
   }
 
   getOutdatedDependencies()
-      .then(dependencies => assertDependencies(dependencies, args.maxWarnings))
-      .catch(errorHandler);
+    .then(dependencies => assertDependencies(dependencies, args.maxWarnings))
+    .catch(errorHandler);
 }

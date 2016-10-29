@@ -16,7 +16,7 @@ module.exports.exec = exec;
 
 function npmOutdatedToList(outdatedObject) {
   return Object.keys(outdatedObject)
-        .map(name => Object.assign({ name }, outdatedObject[name]));
+    .map(name => Object.assign({ name }, outdatedObject[name]));
 }
 module.exports.npmOutdatedToList = npmOutdatedToList;
 
@@ -45,10 +45,10 @@ function assertDependencies(outdatedDependencies, maxWarnings) {
 
 function getOutdatedDependencies() {
   return exec('npm outdated --json')
-      .then(result => result.stdout)
-      .then(result => (result === '' ? '{}' : result))
-      .then(jsonParse)
-      .then(npmOutdatedToList);
+    .then(result => result.stdout)
+    .then(result => (result === '' ? '{}' : result))
+    .then(jsonParse)
+    .then(npmOutdatedToList);
 }
 
 function parseArgs(argv) {
@@ -71,6 +71,6 @@ if (!module.parent) {
   }
 
   getOutdatedDependencies()
-      .then(dependencies => assertDependencies(dependencies, args.maxWarnings))
-      .catch(errorHandler);
+    .then(dependencies => assertDependencies(dependencies, args.maxWarnings))
+    .catch(errorHandler);
 }

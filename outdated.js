@@ -3,14 +3,14 @@
 const childProcess = require('child_process');
 
 function exec(command, options) {
-  const defer = Promise.defer();
-  childProcess.exec(command, options, (err, stdout, stderr) => {
-    if (err) {
-      return defer.reject(err);
-    }
-    return defer.resolve({ stdout, stderr });
+  return new Promise((resolve, reject) => {
+    childProcess.exec(command, options, (err, stdout, stderr) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve({ stdout, stderr });
+    });
   });
-  return defer.promise;
 }
 module.exports.exec = exec;
 

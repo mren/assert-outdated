@@ -44,7 +44,7 @@ function assertDependencies(outdatedDependencies, maxWarnings) {
 }
 
 function getOutdatedDependencies() {
-  return exec('npm outdated --json')
+  return exec('npm outdated --json --save false')
     .then(result => result.stdout)
     .then(result => (result === '' ? '{}' : result))
     .then(jsonParse)

@@ -1,7 +1,6 @@
 {
-  "env": {
-    "mocha": true
-  },
   "extends": "airbnb-base",
-  "plugins": []
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"]
+  }
 }

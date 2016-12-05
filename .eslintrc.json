@@ -3,5 +3,8 @@
     "mocha": true
   },
   "extends": "airbnb-base",
-  "plugins": []
+  "plugins": [],
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"]
+  }
 }

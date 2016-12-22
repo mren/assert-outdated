@@ -11,7 +11,7 @@ describe('assert-outdated', () => {
   );
 
   it('should transform npm output', () => {
-    const result = outdated.npmOutdatedToList({ name: { foo: true } });
+    const result = outdated.objectToList({ name: { foo: true } });
     assert.deepStrictEqual(result, [{ name: 'name', foo: true }]);
   });
 });

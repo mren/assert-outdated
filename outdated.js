@@ -29,7 +29,7 @@ function assertDependencies(outdatedDependencies, maxWarnings) {
   if (outdatedDependencies.length > maxWarnings) {
     const msg = 'Too many outdated dependencies';
     const details = `${outdatedDependencies.length} instead of ${maxWarnings})`;
-    return Promise.reject(new Error(`${msg} (${details}.`));
+    return Promise.reject(Object.assign(new Error(`${msg} (${details}.`), { outdatedDependencies }));
   }
   return Promise.resolve();
 }

@@ -38,6 +38,15 @@ describe('assert-outdated integration', () => {
     const outdated = proxyquire('../outdated', { child_process: childProcess });
     return outdated.outdated(['--max-warnings', '0'])
       .then(() => Promise.reject(new Error()))
-      .catch(err => assert.strictEqual(err.message, 'Too many outdated dependencies (1 instead of 0).'));
+      .catch((err) => {
+        assert.strictEqual(err.message, 'Too many outdated dependencies (1 instead of 0).');
+        assert.deepEqual(err.outdatedDependencies, [{
+          current: '1.0.0',
+          latest: '2.0.0',
+          location: 'node_modules/module',
+          name: 'module',
+          wanted: '2.0.0',
+        }]);
+      });
   });
 });

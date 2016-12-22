@@ -63,14 +63,18 @@ function parseArgs(argv) {
   }, {});
 }
 
-if (!module.parent) {
-  const args = parseArgs(process.argv);
+function outdated(argv) {
+  const args = parseArgs(argv);
   if (!Number.isFinite(args.maxWarnings)) {
     console.log('Usage: --max-warnings <Number>'); // eslint-disable-line no-console
-    process.exit(0);
+    return Promise.resolve();
   }
+  return getOutdatedDependencies()
+    .then(dependencies => assertDependencies(dependencies, args.maxWarnings));
+}
+module.exports.outdated = outdated;
 
-  getOutdatedDependencies()
-    .then(dependencies => assertDependencies(dependencies, args.maxWarnings))
+if (!module.parent) {
+  outdated(process.argv)
     .catch(errorHandler);
 }

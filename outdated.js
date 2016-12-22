@@ -20,15 +20,6 @@ function npmOutdatedToList(outdatedObject) {
 }
 module.exports.npmOutdatedToList = npmOutdatedToList;
 
-function jsonParse(jsonString) {
-  try {
-    return Promise.resolve(JSON.parse(jsonString));
-  } catch (err) {
-    return Promise.reject(new Error(jsonString));
-  }
-}
-module.exports.jsonParse = jsonParse;
-
 function errorHandler(err) {
   console.log(err); // eslint-disable-line no-console
   process.exit(1);
@@ -38,7 +29,7 @@ function assertDependencies(outdatedDependencies, maxWarnings) {
   if (outdatedDependencies.length > maxWarnings) {
     const msg = 'Too many outdated dependencies';
     const details = `${outdatedDependencies.length} instead of ${maxWarnings})`;
-    return Promise.reject(new Error(`${msg} (${details}.`));
+    return Promise.reject(Object.assign(new Error(`${msg} (${details}.`), { outdatedDependencies }));
   }
   return Promise.resolve();
 }
@@ -47,7 +38,7 @@ function getOutdatedDependencies() {
   return exec('npm outdated --json --save false')
     .then(result => result.stdout)
     .then(result => (result === '' ? '{}' : result))
-    .then(jsonParse)
+    .then(JSON.parse)
     .then(npmOutdatedToList);
 }
 
@@ -63,14 +54,18 @@ function parseArgs(argv) {
   }, {});
 }
 
-if (!module.parent) {
-  const args = parseArgs(process.argv);
+function outdated(argv) {
+  const args = parseArgs(argv);
   if (!Number.isFinite(args.maxWarnings)) {
     console.log('Usage: --max-warnings <Number>'); // eslint-disable-line no-console
-    process.exit(0);
+    return Promise.resolve();
   }
+  return getOutdatedDependencies()
+    .then(dependencies => assertDependencies(dependencies, args.maxWarnings));
+}
+module.exports.outdated = outdated;
 
-  getOutdatedDependencies()
-    .then(dependencies => assertDependencies(dependencies, args.maxWarnings))
+if (!module.parent) {
+  outdated(process.argv)
     .catch(errorHandler);
 }

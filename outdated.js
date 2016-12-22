@@ -27,8 +27,7 @@ const assertDependencies = (outdatedDependencies, maxWarnings) => {
 };
 
 const getOutdatedDependencies = () => exec('npm outdated --json --save false')
-  .then(result => result.stdout)
-  .then(result => (result === '' ? '{}' : result))
+  .then(result => result.stdout || '{}')
   .then(JSON.parse)
   .then(objectToList);
 

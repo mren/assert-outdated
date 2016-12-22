@@ -20,15 +20,6 @@ function npmOutdatedToList(outdatedObject) {
 }
 module.exports.npmOutdatedToList = npmOutdatedToList;
 
-function jsonParse(jsonString) {
-  try {
-    return Promise.resolve(JSON.parse(jsonString));
-  } catch (err) {
-    return Promise.reject(new Error(jsonString));
-  }
-}
-module.exports.jsonParse = jsonParse;
-
 function errorHandler(err) {
   console.log(err); // eslint-disable-line no-console
   process.exit(1);
@@ -47,7 +38,7 @@ function getOutdatedDependencies() {
   return exec('npm outdated --json --save false')
     .then(result => result.stdout)
     .then(result => (result === '' ? '{}' : result))
-    .then(jsonParse)
+    .then(JSON.parse)
     .then(npmOutdatedToList);
 }
 

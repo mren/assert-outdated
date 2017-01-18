@@ -4,7 +4,7 @@ const childProcess = require('child_process');
 
 const exec = (command, options) => new Promise((resolve, reject) =>
   childProcess.exec(command, options, (err, stdout, stderr) =>
-    (err ? reject(err) : resolve({ stdout, stderr }))
+    ((err && stdout.length === 0) ? reject(err) : resolve({ stdout, stderr }))
   )
 );
 module.exports.exec = exec;

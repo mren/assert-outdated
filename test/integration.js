@@ -1,4 +1,5 @@
 const assert = require('assert');
+const childProcess = require('child_process');
 
 const proxyquire = require('proxyquire').noPreserveCache();
 const sinon = require('sinon');
@@ -79,5 +80,25 @@ describe('assert-outdated integration', () => {
           wanted: '2.0.0',
         }]);
       });
+  });
+
+  it('should do integration test', () => {
+    const cwd = childProcess.execSync('mktemp -d').toString().split('\n')[0];
+    const npminit = childProcess.execSync('npm init --yes', {cwd }).toString();
+    const install = childProcess.execSync('npm install underscore', {cwd}).toString();
+
+    console.log(cwd);
+    console.log(npminit);
+    console.log(install);
+
+    // const outdated = require('../outdated');
+    //
+    //
+    // const path = outdated.exec('mktemp -d')
+    //   .then(result => result.stdout.split('\n')[0])
+    //   .then(console.log);
+    //
+    // return path;
+
   });
 });

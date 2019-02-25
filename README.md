@@ -14,14 +14,14 @@ npm install --save-dev assert-outdated
 
 On commandline you can run the command like this:
 ```
-node_modules/.bin/assert-outdated-npm-modules --max-warnings 10
+node_modules/.bin/assert-outdated-npm-modules --max-warnings 10 --ignore-pre-releases
 ```
 
 Or put it into your `package.json`:
 ```
 {
   "scripts": {
-    "outdated-modules": "assert-outdated-npm-modules --max-warnings 10",
+    "outdated-modules": "assert-outdated-npm-modules --max-warnings 10 --ignore-pre-releases",
     "test": "npm run lint && npm run outdated-modules && npm run unit-test"
   }
 }

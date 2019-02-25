@@ -17,6 +17,15 @@ const errorHandler = (err) => {
   process.exit(1);
 };
 
+const filterDependencies = (outdatedDependencies, ignorePreReleases) => {
+  if (ignorePreReleases) {
+    return Promise.resolve(outdatedDependencies.filter(dependency => (
+      dependency.current.indexOf('-') !== -1 || dependency.latest.indexOf('-') === -1
+    )));
+  }
+  return Promise.resolve(outdatedDependencies);
+};
+
 const assertDependencies = (outdatedDependencies, maxWarnings) => {
   if (outdatedDependencies.length > maxWarnings) {
     const msg = 'Too many outdated dependencies';
@@ -37,6 +46,8 @@ const parseArgs = argv => argv.reduce((previousValue, currentValue, currentIndex
     if (Number.isFinite(maxWarnings)) {
       return Object.assign({}, previousValue, { maxWarnings });
     }
+  } else if (currentValue === '--ignore-pre-releases') {
+    return Object.assign({}, previousValue, { ignorePreReleases: true });
   }
   return previousValue;
 }, {});
@@ -44,10 +55,11 @@ const parseArgs = argv => argv.reduce((previousValue, currentValue, currentIndex
 const outdated = (argv) => {
   const args = parseArgs(argv);
   if (!Number.isFinite(args.maxWarnings)) {
-    console.log('Usage: --max-warnings <Number>'); // eslint-disable-line no-console
+    console.log('Usage: --max-warnings <Number> [--ignore-pre-releases]'); // eslint-disable-line no-console
     return Promise.resolve();
   }
   return getOutdatedDependencies()
+    .then(dependencies => filterDependencies(dependencies, args.ignorePreReleases))
     .then(dependencies => assertDependencies(dependencies, args.maxWarnings));
 };
 module.exports.outdated = outdated;

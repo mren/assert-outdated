@@ -18,12 +18,15 @@ const errorHandler = (err) => {
 };
 
 const filterDependencies = (outdatedDependencies, ignorePreReleases) => {
+  let filteredDependencies = outdatedDependencies.filter(dependency => (
+    dependency.latest !== 'git' && dependency.latest !== 'linked' && dependency.latest !== 'remote'
+  ));
   if (ignorePreReleases) {
-    return Promise.resolve(outdatedDependencies.filter(dependency => (
+    filteredDependencies = filteredDependencies.filter(dependency => (
       dependency.current.indexOf('-') !== -1 || dependency.latest.indexOf('-') === -1
-    )));
+    ));
   }
-  return Promise.resolve(outdatedDependencies);
+  return Promise.resolve(filteredDependencies);
 };
 
 const assertDependencies = (outdatedDependencies, maxWarnings) => {

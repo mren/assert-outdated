@@ -97,7 +97,9 @@ describe('assert-outdated integration', () => {
     };
     const error = Object.assign(
       new Error('Command failed: npm outdated --json --save false'),
-      { killed: false, code: 1, signal: 0, cmd: 'npm outdated --json --save false' }
+      {
+        killed: false, code: 1, signal: 0, cmd: 'npm outdated --json --save false',
+      },
     );
     const childProcess = {
       exec: sinon.stub().yields(error, JSON.stringify(result)),
@@ -197,7 +199,9 @@ describe('assert-outdated integration', () => {
     };
     const error = Object.assign(
       new Error('Command failed: npm outdated --json --save false'),
-      { killed: false, code: 1, signal: 0, cmd: 'npm outdated --json --save false' }
+      {
+        killed: false, code: 1, signal: 0, cmd: 'npm outdated --json --save false',
+      },
     );
     const childProcess = {
       exec: sinon.stub().yields(error, JSON.stringify(result)),

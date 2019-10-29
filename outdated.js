@@ -2,14 +2,14 @@
 
 const childProcess = require('child_process');
 
-const exec = (command, options) => new Promise((resolve, reject) =>
-  childProcess.exec(command, options, (err, stdout, stderr) =>
-    ((err && stdout.length === 0) ? reject(err) : resolve({ stdout, stderr }))
-  )
-);
+const exec = (command, options) =>
+  // eslint-disable-next-line implicit-arrow-linebreak
+  new Promise((resolve, reject) => childProcess.exec(command, options, (err, stdout, stderr) =>
+    // eslint-disable-next-line implicit-arrow-linebreak
+    ((err && stdout.length === 0) ? reject(err) : resolve({ stdout, stderr }))));
 module.exports.exec = exec;
 
-const objectToList = obj => Object.keys(obj).map(name => Object.assign({ name }, obj[name]));
+const objectToList = (obj) => Object.keys(obj).map((name) => ({ name, ...obj[name] }));
 module.exports.objectToList = objectToList;
 
 const errorHandler = (err) => {
@@ -19,7 +19,7 @@ const errorHandler = (err) => {
 
 const filterDependencies = (outdatedDependencies, ignorePreReleases) => {
   if (ignorePreReleases) {
-    return Promise.resolve(outdatedDependencies.filter(dependency => (
+    return Promise.resolve(outdatedDependencies.filter((dependency) => (
       dependency.current.indexOf('-') !== -1 || dependency.latest.indexOf('-') === -1
     )));
   }
@@ -36,18 +36,18 @@ const assertDependencies = (outdatedDependencies, maxWarnings) => {
 };
 
 const getOutdatedDependencies = () => exec('npm outdated --json --save false')
-  .then(result => result.stdout || '{}')
+  .then((result) => result.stdout || '{}')
   .then(JSON.parse)
   .then(objectToList);
 
-const parseArgs = argv => argv.reduce((previousValue, currentValue, currentIndex) => {
+const parseArgs = (argv) => argv.reduce((previousValue, currentValue, currentIndex) => {
   if (currentValue === '--max-warnings') {
     const maxWarnings = argv[currentIndex + 1] && Number(argv[currentIndex + 1]);
     if (Number.isFinite(maxWarnings)) {
-      return Object.assign({}, previousValue, { maxWarnings });
+      return { ...previousValue, maxWarnings };
     }
   } else if (currentValue === '--ignore-pre-releases') {
-    return Object.assign({}, previousValue, { ignorePreReleases: true });
+    return { ...previousValue, ignorePreReleases: true };
   }
   return previousValue;
 }, {});
@@ -59,8 +59,8 @@ const outdated = (argv) => {
     return Promise.resolve();
   }
   return getOutdatedDependencies()
-    .then(dependencies => filterDependencies(dependencies, args.ignorePreReleases))
-    .then(dependencies => assertDependencies(dependencies, args.maxWarnings));
+    .then((dependencies) => filterDependencies(dependencies, args.ignorePreReleases))
+    .then((dependencies) => assertDependencies(dependencies, args.maxWarnings));
 };
 module.exports.outdated = outdated;
 
